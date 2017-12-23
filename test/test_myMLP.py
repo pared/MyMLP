@@ -1,12 +1,12 @@
 from unittest import TestCase
-from my_mulitlayer_perceptron import MyMLP
+from my_mulitlayer_perceptron import MyMLP, InputFormatException
 import numpy as np
 
 np.random.seed(1)
 
 
 INPUT_LAYER_SIZE = 2000
-OUTPUT_LAYER_SIZE = 200
+OUTPUT_LAYER_SIZE = 1000
 H1 = 3000
 H2 = 2000
 HIDDEN_LAYERS = [H1, H2]
@@ -32,4 +32,12 @@ class TestMyMLP(TestCase):
             self.assertAlmostEqual(np.average(layer.weights), 0.5, 1)
             self.assertAlmostEqual(np.average(layer.bias), 0.5, 1)
 
+    def test_should_raise_input_size_exception(self):
+        input_vec = np.ones((INPUT_LAYER_SIZE - 1, 1))
+        with self.assertRaises(InputFormatException):
+            self.mlp.feed_forward(input_vec)
+
+    def test_should_not_rise_input_size_exception(self):
+        input_vec = np.ones((INPUT_LAYER_SIZE, 1))
+        self.mlp.feed_forward(input_vec)
 

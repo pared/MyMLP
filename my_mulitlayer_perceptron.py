@@ -40,6 +40,10 @@ class MyMLP:
                 print("W" + str(i) + ": " + pretty_str_list(layer.weights[i], 3) + " b" + str(i) + ": " + str(pretty_str_float(layer.bias[i], 3)))
             print("-----------------------")
 
+    def feed_forward(self, input):
+        self.__check_input_size(input.shape)
+
+
     def __initialize_model_with_random_weights(self):
         model = []
         layers = self.hidden_layers + [self.output_size]
@@ -63,6 +67,14 @@ class MyMLP:
         else:
             return self.hidden_layers[index]
 
+    def __check_input_size(self, input_shape):
+        if input_shape != (self.input_size, 1):
+            raise InputFormatException("Wrong input size, expected: %s , actual: %s" % (self.input_size, input_shape))
+
+
+
+class InputFormatException(Exception):
+    pass
 
 class Layer:
     def __init__(self, weights, bias):
