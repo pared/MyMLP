@@ -5,10 +5,10 @@ import numpy as np
 np.random.seed(1)
 
 
-INPUT_LAYER_SIZE = 2
-OUTPUT_LAYER_SIZE = 1
-H1 = 3
-H2 = 5
+INPUT_LAYER_SIZE = 2000
+OUTPUT_LAYER_SIZE = 200
+H1 = 3000
+H2 = 2000
 HIDDEN_LAYERS = [H1, H2]
 
 
@@ -17,7 +17,7 @@ class TestMyMLP(TestCase):
         super(TestMyMLP, self).__init__(*args, **kwargs)
         self.mlp = MyMLP(INPUT_LAYER_SIZE, OUTPUT_LAYER_SIZE, HIDDEN_LAYERS)
 
-    def test_model_structure(self):
+    def test_should_model_have_proper_structure(self):
         model = self.mlp.model
         self.assertEqual(model[0].weights.shape, (H1, INPUT_LAYER_SIZE))
         self.assertEqual(model[0].bias.shape, (H1, 1))
@@ -26,6 +26,10 @@ class TestMyMLP(TestCase):
         self.assertEqual(model[2].weights.shape, (OUTPUT_LAYER_SIZE, H2))
         self.assertEqual(model[2].bias.shape, (OUTPUT_LAYER_SIZE, 1))
 
-
+    def test_should_model_weights_have_uniform_dist(self):
+        model = self.mlp.model
+        for layer in model:
+            self.assertAlmostEqual(np.average(layer.weights), 0.5, 1)
+            self.assertAlmostEqual(np.average(layer.bias), 0.5, 1)
 
 
