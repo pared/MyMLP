@@ -34,11 +34,17 @@ class MyMLP:
         for epoch in range(epochs):
             pass
 
-    def summary(self):
+    def print_weights(self):
         for layer in self.model:
             for i in range(layer.weights.shape[0]):
                 print("W" + str(i) + ": " + pretty_str_list(layer.weights[i], 3) + " b" + str(i) + ": " + str(pretty_str_float(layer.bias[i], 3)))
             print("-----------------------")
+
+    def summary(self):
+        print("IN: %i" % self.input_size)
+        for index, layer_size in enumerate(self.hidden_layers):
+            print("H%i: %i" % (index + 1, layer_size))
+        print("OUT: %i" % self.output_size)
 
     def feed_forward(self, input):
         self.__check_input_size(input.shape)
