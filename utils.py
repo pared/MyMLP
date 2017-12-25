@@ -1,6 +1,5 @@
 from typing import List
 
-
 def pretty_str_list(vec: List[float], precision: int):
     result = "[ "
     for elem in vec:
@@ -9,3 +8,8 @@ def pretty_str_list(vec: List[float], precision: int):
 
 def pretty_str_float(value: float, precision: int):
     return ("%." + ("%df" % precision))%value
+
+
+
+
+

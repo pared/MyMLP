@@ -1,20 +1,16 @@
 import numpy as np
 from typing import List, Tuple
 
+from activations import ACTIVATIONS
+from exceptions import InputFormatException
+from layer import Layer, ModelLayer
 from utils import pretty_str_float, pretty_str_list
 
 
 class MyMLP:
-    def __init__(self, input_size: int, output_size: int, layers: List[int]):
-        '''
-        :param input_size: number of input parameters
-        :param output_size: number of output parameters
-        :param layers: consequent elements indicate number of nodes in hidden layers
-         [3 , 2] means two hidden, dense layers with 3 and 2 nodes respectively
-        '''
+    def __init__(self, input_size: int, layers: List[Layer]):
         self.input_size = input_size
-        self.output_size = output_size
-        self.hidden_layers = layers
+        self.layers = layers
         self.model = self.__initialize_model_with_random_weights()
 
     def fit(self, X: List[List], Y: List[List], epochs: int):
@@ -42,47 +38,37 @@ class MyMLP:
 
     def summary(self):
         print("IN: %i" % self.input_size)
-        for index, layer_size in enumerate(self.hidden_layers):
-            print("H%i: %i" % (index + 1, layer_size))
-        print("OUT: %i" % self.output_size)
+        for index, layer in enumerate(self.layers[:-1]):
+            print("H%i: %i" % (index + 1, layer.num_nodes))
+        print("OUT: %i" % self.layers[-1].num_nodes)
 
     def feed_forward(self, input):
         self.__check_input_size(input.shape)
-
+        self.summary()
 
     def __initialize_model_with_random_weights(self):
         model = []
-        layers = self.hidden_layers + [self.output_size]
-        for index, nodes_number in enumerate(layers):
+        for index, layer in enumerate(self.layers):
             width = self.__get_layer_nodes_number(index - 1)
-            height = nodes_number
+            height = layer.num_nodes
 
             bias = np.random.rand(height, 1)
             W = np.random.rand(height, width)
 
-            model.append(Layer(W, bias))
+            model.append(ModelLayer(W, bias, ACTIVATIONS[layer.activation]))
 
         return model
 
-
     def __get_layer_nodes_number(self, index):
-        if index > len(self.hidden_layers) - 1:
+        if index > len(self.layers) - 1:
             raise Exception('Trying to get number of nodes from non-existing layer')
         if index is -1:
             return self.input_size
         else:
-            return self.hidden_layers[index]
+            return self.layers[index].num_nodes
 
     def __check_input_size(self, input_shape):
         if input_shape != (self.input_size, 1):
             raise InputFormatException("Wrong input size, expected: %s , actual: %s" % (self.input_size, input_shape))
 
 
-
-class InputFormatException(Exception):
-    pass
-
-class Layer:
-    def __init__(self, weights, bias):
-        self.weights = weights
-        self.bias = bias
