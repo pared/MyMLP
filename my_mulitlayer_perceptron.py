@@ -44,7 +44,13 @@ class MyMLP:
 
     def feed_forward(self, input):
         self.__check_input_size(input.shape)
-        self.summary()
+        result = input
+        for model_layer in self.model:
+            result = np.matmul(model_layer.weights, result)
+            result += model_layer.bias
+            result = model_layer.activation.a(result)
+        return result
+
 
     def __initialize_model_with_random_weights(self):
         model = []
