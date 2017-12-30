@@ -4,6 +4,7 @@ from layer import Layer
 from my_mulitlayer_perceptron import MyMLP, InputFormatException
 import numpy as np
 
+
 np.random.seed(1)
 
 
@@ -58,9 +59,8 @@ class TestMyMLP(TestCase):
         new_bias[1] = [-1]
 
         mlp.model[0].bias = new_bias
-        mlp.print_weights()
 
         result = mlp.feed_forward(input_vec)
-        self.assertEqual(result[0][0], 4)
-        self.assertEqual(result[1][0], 0)
+        np.testing.assert_array_equal(result, np.array([[4],
+                                                        [0]]))
 
