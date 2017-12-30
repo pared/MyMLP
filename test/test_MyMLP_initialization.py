@@ -4,16 +4,13 @@ from layer import Layer
 from my_mulitlayer_perceptron import MyMLP, InputFormatException
 import numpy as np
 
-
 np.random.seed(1)
-
 
 INPUT_LAYER_SIZE = 2000
 OUTPUT_LAYER = Layer(1000, 'sigmoid')
 H1 = Layer(3000, 'relu')
 H2 = Layer(2000, 'tanh')
 LAYERS = [H1, H2, OUTPUT_LAYER]
-
 
 class TestMyMLP(TestCase):
     def __init__(self, *args, **kwargs):
@@ -43,24 +40,3 @@ class TestMyMLP(TestCase):
     def test_should_not_rise_input_size_exception(self):
         input_vec = np.ones((INPUT_LAYER_SIZE, 1))
         self.mlp.feed_forward(input_vec)
-
-    def test_feed_forward(self):
-        input_vec = np.ones((2, 1))
-        mlp = MyMLP(2, [Layer(2, 'relu')])
-
-        #override weights
-        new_weights = np.zeros(shape=(2, 2))
-        new_weights[0] = [2, 1]
-        new_weights[1] = [-1, -2]
-        mlp.model[0].weights = new_weights
-
-        new_bias = np.zeros(shape=(2, 1))
-        new_bias[0] = [1]
-        new_bias[1] = [-1]
-
-        mlp.model[0].bias = new_bias
-
-        result = mlp.feed_forward(input_vec)
-        np.testing.assert_array_equal(result, np.array([[4],
-                                                        [0]]))
-

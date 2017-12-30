@@ -42,15 +42,27 @@ class MyMLP:
             print("H%i: %i" % (index + 1, layer.num_nodes))
         print("OUT: %i" % self.layers[-1].num_nodes)
 
-    def feed_forward(self, input):
-        self.__check_input_size(input.shape)
-        result = input
-        for model_layer in self.model:
+    def feed_forward(self, input_vec):
+        '''
+        :param input_vec: input vector for neural network
+        :return: tuple, first element is result of propagation of input through NN,
+        second is a map storing z's: layer_number: input_of_layer
+        I assume that input is first layer, so map lowest key is 2 (there is no need to store input)
+        '''
+
+        self.__check_input_size(input_vec.shape)
+        z_map = {}
+        result = input_vec
+        for index,model_layer in enumerate(self.model):
             result = np.matmul(model_layer.weights, result)
             result += model_layer.bias
-            result = model_layer.activation.a(result)
-        return result
 
+            #save layer input
+            layer_num = index + 2
+            z_map[layer_num] = result
+
+            result = model_layer.activation.a(result)
+        return result, z_map
 
     def __initialize_model_with_random_weights(self):
         model = []
