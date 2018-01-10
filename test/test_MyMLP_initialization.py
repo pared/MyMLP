@@ -31,6 +31,7 @@ class TestMyMLP(TestCase):
         for layer in model:
             self.assertAlmostEqual(np.average(layer.weights), 0.5, 1)
             self.assertAlmostEqual(np.average(layer.bias), 0.5, 1)
+            #TODO find out what is optimal avg and std for layers weights (and why, if there is)
 
     def test_should_raise_input_size_exception(self):
         input_vec = np.ones((INPUT_LAYER_SIZE - 1, 1))

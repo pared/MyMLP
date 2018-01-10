@@ -46,23 +46,23 @@ class MyMLP:
         '''
         :param input_vec: input vector for neural network
         :return: tuple, first element is result of propagation of input through NN,
-        second is a map storing z's: layer_number: input_of_layer
+        second is a map storing z's: {layer_number: input_of_layer_in_current_pass}
         I assume that input is first layer, so map lowest key is 2 (there is no need to store input)
         '''
 
         self.__check_input_size(input_vec.shape)
-        z_map = {}
+        layers_inputs = []
+
         result = input_vec
         for index,model_layer in enumerate(self.model):
             result = np.matmul(model_layer.weights, result)
             result += model_layer.bias
 
             #save layer input
-            layer_num = index + 2
-            z_map[layer_num] = result
+            layers_inputs.append(result)
 
             result = model_layer.activation.a(result)
-        return result, z_map
+        return result, layers_inputs
 
     def __initialize_model_with_random_weights(self):
         model = []

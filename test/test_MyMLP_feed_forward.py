@@ -26,6 +26,6 @@ class TestMyMLPFeedForward(TestCase):
         np.testing.assert_array_equal(output, np.array([[4],
                                                         [0]]))
 
-        self.assertEqual(list(layers_inputs.keys()), [2])
-        np.testing.assert_array_equal(layers_inputs[2], np.array([[4],
+        #this mlp has 2 layers, so there is only one z, before the 2 layer
+        np.testing.assert_array_equal(layers_inputs[0], np.array([[4],
                                                                   [-4]]))
