@@ -2,6 +2,7 @@ import numpy as np
 from typing import List, Tuple
 
 from activations import ACTIVATIONS
+from error import mse
 from exceptions import InputFormatException
 from layer import Layer, ModelLayer
 from utils import pretty_str_float, pretty_str_list
@@ -12,6 +13,8 @@ class MyMLP:
         self.input_size = input_size
         self.layers = layers
         self.model = self.__initialize_model_with_random_weights()
+        self.error = mse() #TODO custom error functions?
+        self.learning_rate = 0.1
 
     def fit(self, X: List[List], Y: List[List], epochs: int):
         '''
@@ -41,6 +44,14 @@ class MyMLP:
         for index, layer in enumerate(self.layers[:-1]):
             print("H%i: %i" % (index + 1, layer.num_nodes))
         print("OUT: %i" % self.layers[-1].num_nodes)
+
+    def back_propagate(self, input_vec, expected_result):
+        actual_result, layers_inputs = self.feed_forward(input_vec)
+
+        layers_inputs.reverse()
+        model_rev = self.model
+        model_rev.reverse()
+
 
     def feed_forward(self, input_vec):
         '''
@@ -88,5 +99,8 @@ class MyMLP:
     def __check_input_size(self, input_shape):
         if input_shape != (self.input_size, 1):
             raise InputFormatException("Wrong input size, expected: %s , actual: %s" % (self.input_size, input_shape))
+
+    def set_learning_rate(self, value):
+        self.learning_rate = value
 
 
